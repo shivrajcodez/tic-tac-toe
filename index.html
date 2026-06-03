@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="A premium Tic Tac Toe game with AI opponent, multiple difficulty levels, and stunning glassmorphism UI." />
+  <meta name="theme-color" content="#090b14" />
+  <title>TicTacToe — Premium Edition</title>
+
+  <!-- Favicon (inline SVG as data URI) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="src/css/style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="logo">TIC TAC TOE</div>
+    <div class="logo-sub">Premium Edition</div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SETUP SCREEN
+  ══════════════════════════════════════════════════════════════ -->
+  <div id="setup-screen">
+    <div class="glass-card" style="padding: 28px 24px 24px;">
+
+      <!-- Game Mode -->
+      <div class="setup-section">
+        <div class="section-label">Game Mode</div>
+        <div class="toggle-group">
+          <button class="toggle-btn active" data-mode="pvc">🤖 vs Computer</button>
+          <button class="toggle-btn" data-mode="pvp">👥 vs Player</button>
+        </div>
+      </div>
+
+      <!-- Difficulty -->
+      <div class="setup-section" id="difficulty-section">
+        <div class="section-label">Difficulty</div>
+        <div class="difficulty-group">
+          <button class="diff-btn" data-difficulty="easy">Easy</button>
+          <button class="diff-btn active" data-difficulty="medium">Medium</button>
+          <button class="diff-btn" data-difficulty="hard">Hard</button>
+        </div>
+      </div>
+
+      <!-- Player Names -->
+      <div class="setup-section">
+        <div class="section-label">Player Names</div>
+        <div class="name-inputs">
+          <div class="input-wrapper">
+            <span class="input-prefix x">X</span>
+            <input
+              id="p1-name-input"
+              class="name-input"
+              type="text"
+              placeholder="Player 1"
+              maxlength="16"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <div class="input-wrapper" id="p2-name-section">
+            <span class="input-prefix o">O</span>
+            <input
+              id="p2-name-input"
+              class="name-input"
+              type="text"
+              placeholder="Player 2"
+              maxlength="16"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Start -->
+      <button id="start-btn" class="start-btn">
+        Start Game ↗
+      </button>
+
+    </div>
+  </div><!-- /setup-screen -->
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       GAME SCREEN
+  ══════════════════════════════════════════════════════════════ -->
+  <div id="game-screen" class="hidden">
+
+    <!-- Scoreboard -->
+    <div class="scoreboard">
+
+      <!-- Player 1 -->
+      <div class="score-card" id="p1-card">
+        <div class="score-mark">X</div>
+        <div class="score-name" id="p1-name">Player 1</div>
+        <div class="score-value" id="p1-score">0</div>
+      </div>
+
+      <!-- Draws (center) -->
+      <div class="score-draws">
+        <div class="draws-label">Draw</div>
+        <div class="draws-value" id="draws-score">0</div>
+      </div>
+
+      <!-- Player 2 -->
+      <div class="score-card" id="p2-card">
+        <div class="score-mark">O</div>
+        <div class="score-name" id="p2-name">Player 2</div>
+        <div class="score-value" id="p2-score">0</div>
+      </div>
+
+    </div><!-- /scoreboard -->
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-badge" id="status-badge">X</div>
+      <span id="status-text">Loading…</span>
+      <div id="thinking-indicator" aria-label="Computer thinking">
+        <div class="thinking-dot"></div>
+        <div class="thinking-dot"></div>
+        <div class="thinking-dot"></div>
+      </div>
+    </div>
+
+    <!-- Board -->
+    <div id="board" role="grid" aria-label="Tic Tac Toe board"></div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-icon" id="sound-toggle" title="Mute sounds" aria-label="Toggle sound">🔊</button>
+      <button class="btn-primary" id="restart-btn" aria-label="Restart game">
+        ↺ Restart
+      </button>
+      <button class="btn-primary" id="new-match-btn" aria-label="New match">
+        ✦ New Match
+      </button>
+      <button class="btn-icon" id="back-btn" title="Back to menu" aria-label="Back to menu">⚙</button>
+    </div>
+
+  </div><!-- /game-screen -->
+
+</div><!-- /app -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     RESULT OVERLAY
+══════════════════════════════════════════════════════════════ -->
+<div id="result-overlay" role="dialog" aria-modal="true" aria-labelledby="result-title">
+  <div class="result-card">
+    <span class="result-emoji" id="result-emoji">🏆</span>
+    <h2 class="result-title" id="result-title">Player Wins!</h2>
+    <p class="result-subtitle" id="result-subtitle">Congratulations!</p>
+    <div class="result-actions">
+      <button class="result-btn" id="overlay-restart-btn">↺ Play Again</button>
+      <button class="result-btn" id="overlay-newmatch-btn">✦ New Match</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── JS Entry ─────────────────────────────────────────────────── -->
+<script type="module" src="src/js/App.js"></script>
+
+</body>
+</html>

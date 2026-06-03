@@ -1,0 +1,236 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
+  .preview-wrap {
+    background: #090b14;
+    border-radius: 16px;
+    padding: 24px 16px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .phone-frame {
+    width: 300px;
+    background: #0d1021;
+    border-radius: 32px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    padding: 20px 16px 24px;
+    box-shadow: 0 0 0 6px #090b14, 0 0 0 7.5px rgba(255,255,255,0.07);
+    flex-shrink: 0;
+  }
+  .screen-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* --- LOGO --- */
+  .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; text-align: center; background: linear-gradient(135deg, #ff6b6b, #a78bfa, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.02em; margin-bottom: 2px; }
+  .logo-sub { font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); text-align: center; margin-bottom: 14px; }
+
+  /* --- SCOREBOARD --- */
+  .scoreboard { display: grid; grid-template-columns: 1fr auto 1fr; gap: 7px; margin-bottom: 10px; }
+  .sc { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 8px; text-align: center; }
+  .sc.active { border-color: rgba(255,107,107,0.5); background: rgba(255,107,107,0.08); box-shadow: 0 0 14px rgba(255,107,107,0.2); }
+  .sc.active-o { border-color: rgba(78,205,196,0.5); background: rgba(78,205,196,0.08); box-shadow: 0 0 14px rgba(78,205,196,0.2); }
+  .sc-mark { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800; }
+  .sc-mark.x { color: #ff6b6b; } .sc-mark.o { color: #4ecdc4; }
+  .sc-name { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.4); margin: 2px 0 4px; }
+  .sc-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; line-height: 1; }
+  .sc-val.x { color: #ff6b6b; } .sc-val.o { color: #4ecdc4; }
+  .sc-draws { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 6px 10px; }
+  .draws-lbl { font-size: 8px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); }
+  .draws-val { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: rgba(255,255,255,0.4); }
+
+  /* --- STATUS --- */
+  .status-bar { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; }
+  .status-badge { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800; color: #ff6b6b; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
+  .status-txt { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  /* --- BOARD --- */
+  .board { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; margin-bottom: 10px; }
+  .cell { aspect-ratio: 1; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; }
+  .cell.cx { color: #ff6b6b; background: rgba(255,107,107,0.06); border-color: rgba(255,107,107,0.25); text-shadow: 0 0 16px rgba(255,107,107,0.6); }
+  .cell.co { color: #4ecdc4; background: rgba(78,205,196,0.06); border-color: rgba(78,205,196,0.25); text-shadow: 0 0 16px rgba(78,205,196,0.5); }
+  .cell.win { animation: glow-x 1s ease-in-out infinite alternate; }
+  .cell.co.win { animation: glow-o 1s ease-in-out infinite alternate; }
+  .cell.empty { border-style: dashed; opacity: 0.5; }
+  @keyframes glow-x { from { box-shadow: 0 0 8px rgba(255,107,107,0.3); } to { box-shadow: 0 0 20px rgba(255,107,107,0.7); border-color: #ff6b6b; } }
+  @keyframes glow-o { from { box-shadow: 0 0 8px rgba(78,205,196,0.3); } to { box-shadow: 0 0 20px rgba(78,205,196,0.7); border-color: #4ecdc4; } }
+
+  /* --- BUTTONS --- */
+  .btn-row { display: flex; gap: 6px; align-items: center; }
+  .btn-icon-sm { width: 34px; height: 34px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: rgba(255,255,255,0.5); flex-shrink: 0; }
+  .btn-main { flex: 1; padding: 9px 8px; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; text-align: center; border: 1px solid; }
+  .btn-restart { background: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.35); color: #ff6b6b; }
+  .btn-new { background: rgba(78,205,196,0.1); border-color: rgba(78,205,196,0.35); color: #4ecdc4; }
+
+  /* --- SETUP SCREEN --- */
+  .setup-section { margin-bottom: 12px; }
+  .sec-lbl { font-size: 9px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 6px; }
+  .toggle-grp { display: flex; gap: 5px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 4px; }
+  .tog { flex: 1; padding: 7px 6px; border-radius: 7px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.4); text-align: center; }
+  .tog.active { background: linear-gradient(135deg, rgba(167,139,250,0.25), rgba(78,205,196,0.15)); color: rgba(255,255,255,0.9); box-shadow: inset 0 0 0 1px rgba(167,139,250,0.3); }
+  .diff-grp { display: flex; gap: 5px; }
+  .diff { flex: 1; padding: 8px 6px; border-radius: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-align: center; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.3); }
+  .diff.easy { background: rgba(78,205,196,0.15); border-color: #4ecdc4; color: #4ecdc4; }
+  .diff.medium { background: rgba(255,217,61,0.12); border-color: #ffd93d; color: #ffd93d; }
+  .diff.hard { background: rgba(255,107,107,0.15); border-color: #ff6b6b; color: #ff6b6b; }
+  .name-inp { width: 100%; padding: 9px 10px 9px 32px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 6px; position: relative; box-sizing: border-box; }
+  .inp-wrap { position: relative; margin-bottom: 6px; }
+  .inp-pre { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 9px; font-weight: 700; }
+  .inp-pre.x { color: #ff6b6b; } .inp-pre.o { color: #4ecdc4; }
+  .inp-field { width: 100%; padding: 9px 10px 9px 28px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; color: rgba(255,255,255,0.5); font-size: 11px; box-sizing: border-box; outline: none; }
+  .start-btn { width: 100%; padding: 12px; border-radius: 9px; background: linear-gradient(135deg, #a78bfa, #4ecdc4); font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; text-align: center; margin-top: 4px; }
+
+  /* --- RESULT OVERLAY --- */
+  .result-overlay-wrap { position: relative; width: 300px; flex-shrink: 0; }
+  .overlay-bg { background: rgba(9,11,20,0.88); border-radius: 32px; border: 1.5px solid rgba(255,255,255,0.1); padding: 20px 16px 24px; box-shadow: 0 0 0 6px #090b14, 0 0 0 7.5px rgba(255,255,255,0.07); }
+  .result-card-inner { background: rgba(20,22,40,0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 28px 20px 20px; text-align: center; }
+  .r-emoji { font-size: 40px; display: block; margin-bottom: 10px; }
+  .r-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ff6b6b, #a78bfa, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+  .r-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+  .r-btn { width: 100%; padding: 11px; border-radius: 9px; font-size: 11px; font-weight: 600; text-align: center; margin-bottom: 7px; border: 1px solid; }
+  .r-btn-primary { background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(78,205,196,0.15)); border-color: rgba(167,139,250,0.35); color: #a78bfa; }
+  .r-btn-sec { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+
+  .caption { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.2); text-align: center; margin-top: 8px; }
+</style>
+
+<div class="preview-wrap">
+
+  <!-- Screen 1: Setup -->
+  <div>
+    <div class="screen-label">Setup Screen</div>
+    <div class="phone-frame">
+      <div class="logo">TIC TAC TOE</div>
+      <div class="logo-sub">Premium Edition</div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px 14px 14px;">
+        <div class="setup-section">
+          <div class="sec-lbl">Game Mode</div>
+          <div class="toggle-grp">
+            <div class="tog active">🤖 vs Computer</div>
+            <div class="tog">👥 vs Player</div>
+          </div>
+        </div>
+        <div class="setup-section">
+          <div class="sec-lbl">Difficulty</div>
+          <div class="diff-grp">
+            <div class="diff easy">Easy</div>
+            <div class="diff medium">Medium</div>
+            <div class="diff hard">Hard</div>
+          </div>
+        </div>
+        <div class="setup-section">
+          <div class="sec-lbl">Player Names</div>
+          <div class="inp-wrap">
+            <span class="inp-pre x">X</span>
+            <div class="inp-field">Player 1</div>
+          </div>
+        </div>
+        <div class="start-btn">Start Game ↗</div>
+      </div>
+    </div>
+    <div class="caption">Setup screen</div>
+  </div>
+
+  <!-- Screen 2: Game in progress -->
+  <div>
+    <div class="screen-label">Game Screen</div>
+    <div class="phone-frame">
+      <div class="logo">TIC TAC TOE</div>
+      <div class="logo-sub">Premium Edition</div>
+      <div class="scoreboard">
+        <div class="sc active">
+          <div class="sc-mark x">X</div>
+          <div class="sc-name">Player 1</div>
+          <div class="sc-val x">2</div>
+        </div>
+        <div class="sc-draws">
+          <div class="draws-lbl">Draw</div>
+          <div class="draws-val">1</div>
+        </div>
+        <div class="sc active-o">
+          <div class="sc-mark o">O</div>
+          <div class="sc-name">Computer</div>
+          <div class="sc-val o">1</div>
+        </div>
+      </div>
+      <div class="status-bar">
+        <div class="status-badge">X</div>
+        <span class="status-txt">Player 1's turn</span>
+      </div>
+      <div class="board">
+        <div class="cell cx">X</div>
+        <div class="cell co">O</div>
+        <div class="cell cx">X</div>
+        <div class="cell co">O</div>
+        <div class="cell cx">X</div>
+        <div class="cell empty"></div>
+        <div class="cell empty"></div>
+        <div class="cell co">O</div>
+        <div class="cell empty"></div>
+      </div>
+      <div class="btn-row">
+        <div class="btn-icon-sm">🔊</div>
+        <div class="btn-main btn-restart">↺ Restart</div>
+        <div class="btn-main btn-new">✦ New Match</div>
+        <div class="btn-icon-sm">⚙</div>
+      </div>
+    </div>
+    <div class="caption">Active game</div>
+  </div>
+
+  <!-- Screen 3: Win state with overlay -->
+  <div>
+    <div class="screen-label">Win Overlay</div>
+    <div class="overlay-bg">
+      <div class="logo">TIC TAC TOE</div>
+      <div class="logo-sub">Premium Edition</div>
+      <div class="scoreboard" style="margin-bottom:8px;">
+        <div class="sc active">
+          <div class="sc-mark x">X</div>
+          <div class="sc-name">Player 1</div>
+          <div class="sc-val x">3</div>
+        </div>
+        <div class="sc-draws">
+          <div class="draws-lbl">Draw</div>
+          <div class="draws-val">1</div>
+        </div>
+        <div class="sc">
+          <div class="sc-mark o">O</div>
+          <div class="sc-name">Computer</div>
+          <div class="sc-val o">1</div>
+        </div>
+      </div>
+      <div class="board" style="margin-bottom:8px;opacity:0.45;">
+        <div class="cell cx win">X</div>
+        <div class="cell co">O</div>
+        <div class="cell empty"></div>
+        <div class="cell co">O</div>
+        <div class="cell cx win">X</div>
+        <div class="cell empty"></div>
+        <div class="cell empty"></div>
+        <div class="cell co">O</div>
+        <div class="cell cx win">X</div>
+      </div>
+      <div class="result-card-inner">
+        <span class="r-emoji">🏆</span>
+        <div class="r-title">Player 1 Wins!</div>
+        <div class="r-sub">Congratulations!</div>
+        <div class="r-btn r-btn-primary">↺ Play Again</div>
+        <div class="r-btn r-btn-sec">✦ New Match</div>
+      </div>
+    </div>
+    <div class="caption">Win overlay</div>
+  </div>
+
+</div>

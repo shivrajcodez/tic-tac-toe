@@ -1,0 +1,17 @@
+{
+  "name": "tictactoe-premium",
+  "version": "1.0.0",
+  "description": "Premium Tic Tac Toe with AI, glassmorphism UI, and Vercel deployment",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve . --listen 3000 --cors",
+    "start": "npx serve . --listen 3000",
+    "preview": "npx serve . --listen 8080"
+  },
+  "keywords": ["tictactoe", "game", "AI", "minimax", "glassmorphism"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}
